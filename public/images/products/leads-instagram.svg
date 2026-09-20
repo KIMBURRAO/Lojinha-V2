@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#1a1a1a"/>
+  <rect x="150" y="85" width="100" height="100" rx="16" fill="#22c55e" opacity="0.15"/>
+  <circle cx="200" cy="125" r="20" stroke="#22c55e" stroke-width="2"/>
+  <path d="M185 155c0-8.284 6.716-15 15-15 8.284 0 15 6.716 15 15" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+  <path d="M170 165h60" stroke="#22c55e" stroke-width="2" opacity="0.5"/>
+  <text x="200" y="230" text-anchor="middle" fill="#a1a1aa" font-family="sans-serif" font-size="12">Leads Instagram</text>
+</svg>

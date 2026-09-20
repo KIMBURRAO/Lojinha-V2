@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  order    Int       @default(0)
+  products Product[]
+}
+
+model Product {
+  id                   String       @id @default(cuid())
+  name                 String
+  slug                 String       @unique
+  shortDescription     String
+  fullDescription      String
+  imageUrl             String
+  priceCents           Int
+  originalPriceCents   Int?
+  deliveryType         String       @default("FIXED") // FIXED | STOCK
+  fixedDeliveryContent String?
+  isActive             Boolean      @default(true)
+  categoryId           String
+  category             Category     @relation(fields: [categoryId], references: [id])
+  stockItems           StockItem[]
+  orderItems           OrderItem[]
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}
+
+model StockItem {
+  id                String    @id @default(cuid())
+  productId         String
+  product           Product   @relation(fields: [productId], references: [id])
+  content           String
+  isUsed            Boolean   @default(false)
+  usedInOrderItemId String?   @unique
+  usedInOrderItem   OrderItem? @relation(fields: [usedInOrderItemId], references: [id])
+  createdAt         DateTime  @default(now())
+}
+
+model Coupon {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  percentOff Int
+  isActive   Boolean   @default(true)
+  expiresAt  DateTime?
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  whatsapp  String?
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id])
+  totalCents  Int
+  couponCode  String?
+  status      String      @default("PENDING") // PENDING | PAID | CANCELED | EXPIRED
+  pixChargeId String?
+  paidAt      DateTime?
+  items       OrderItem[]
+  createdAt   DateTime    @default(now())
+}
+
+model OrderItem {
+  id               String     @id @default(cuid())
+  orderId          String
+  order            Order      @relation(fields: [orderId], references: [id])
+  productId        String
+  product          Product    @relation(fields: [productId], references: [id])
+  quantity         Int
+  unitPriceCents   Int
+  deliveredContent String?
+  stockItem        StockItem?
+}
